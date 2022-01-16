@@ -1,32 +1,47 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+  <component :is="layoutComponent">
     <router-view />
-  </div>
+  </component>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { mapActions, mapState } from 'vuex';
+import PublicLayout from '@/views/layout/PublicLayout';
+import Layout from '@/views/layout/Layout';
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+export default {
+  name: 'App',
+  created() {
+    this.fetchUserInfo();
+  },
+  computed: {
+    ...mapState(['user']),
+    layoutComponent() {
+      const layout = this.$route.meta?.layout;
+      if (layout === 'public') {
+        return PublicLayout;
+      }
+      return Layout;
+    },
+  },
+  methods: {
+    ...mapActions(['fetchUser']),
+    async fetchUserInfo() {
+      try {
+        await this.fetchUser();
+      } catch (err) {
+        console.log('Unauthorized');
+      }
+    },
+  },
+  watch: {
+    user(user) {
+      if (user) {
+        this.$router.push('/actives');
+      } else {
+        this.$router.push('/auth');
+      }
+    },
+  },
+};
+</script>

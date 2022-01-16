@@ -1,30 +1,64 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+
+import store from '@/store';
+import HomePage from '@/views/HomePage.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: Home,
+    path: '/',
+    name: 'Home',
+    component: HomePage,
+    meta: {
+      layout: 'public',
+    },
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    path: '/auth',
+    name: 'AuthPage',
+    component: () => import('@/views/AuthPage.vue'),
+    meta: {
+      layout: 'public',
+    },
+  },
+  {
+    path: '/actives',
+    name: 'ActivesPage',
+    component: () => import('@/views/ActivesPage.vue'),
+  },
+  {
+    path: '/completeds',
+    name: 'CompletedsPage',
+    component: () => import('@/views/CompletedsPage.vue'),
+  },
+  {
+    path: '/groups',
+    name: 'GroupsPage',
+    component: () => import('@/views/GroupsPage.vue'),
   },
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.meta?.layout === 'public') {
+    return next();
+  }
+
+  if (store.getters.getIsAuthenticated) {
+    if (to.name === 'AuthPage') {
+      return next('/actives');
+    }
+    return next();
+  }
+
+  next({ name: 'AuthPage' });
 });
 
 export default router;
