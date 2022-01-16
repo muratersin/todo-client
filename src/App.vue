@@ -38,6 +38,8 @@ export default {
     user() {
       if (!this.user) {
         this.$router.push('auth');
+      } else {
+        this.$router.push('actives');
       }
     },
   },
