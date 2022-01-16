@@ -2,6 +2,7 @@ import axios from 'axios';
 
 class TodoService {
   constructor() {
+    this.token = null;
     this._axios = axios.create({
       baseURL: process.env.TODO_SERVICE_URL || 'http://localhost:3000',
     });
@@ -11,12 +12,10 @@ class TodoService {
 
   _setupInterceptors() {
     this._axios.interceptors.request.use((config) => {
-      if (!config.headers.common['Authorization']) {
-        const token = localStorage.getItem('access_token');
-        // FIXME: may can get empty header for each request
-        if (token) {
-          config.headers.common['Authorization'] = `Bearer ${token}`;
-        }
+      this.token = this.token || localStorage.getItem('access_token');
+
+      if (this.token) {
+        config.headers.common['Authorization'] = `Bearer ${this.token}`;
       }
 
       return config;
