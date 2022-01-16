@@ -4,16 +4,16 @@
       <v-card-title class="text-h6 grey lighten-2">{{ submitText }} Todo</v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
-          <v-text-field :rules="nameRules" label="Content" v-model="content"></v-text-field>
-          <v-select v-model="groupId" :items="groups" item-text="name" item-value="id" label="Group"></v-select>
+          <v-text-field v-model="content" :rules="contentRules" label="Content"></v-text-field>
+          <v-select v-model="groupId" :items="groups" :rules="requiredRule" item-text="name" item-value="id" label="Group"></v-select>
           <v-row>
             <v-col>
-              <v-select v-model="priority" :items="priorities" label="Priority"></v-select>
+              <v-select required v-model="priority" :items="priorities" :rules="requiredRule" label="Priority"></v-select>
             </v-col>
             <v-col>
               <v-menu v-model="menu" :close-on-content-click="false" transition="scale-transition" min-width="auto">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field v-model="dueDate" label="Due Date" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"></v-text-field>
+                  <v-text-field required v-model="dueDate" label="Due Date" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"></v-text-field>
                 </template>
                 <v-date-picker v-model="dueDate" @input="menu = false"></v-date-picker>
               </v-menu>
@@ -45,14 +45,15 @@ export default {
   data() {
     return {
       priorities: PRIORITIES,
-      dueDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
+      dueDate: new Date().toISOString().slice(0, 10),
       menu: false,
       valid: false,
       loading: false,
       content: null,
       priority: null,
       groupId: null,
-      nameRules: [(v) => (v && v.length >= 2 && v.length <= 50) || 'Group name must be between 2-50 characters long'],
+      contentRules: [(v) => (v && v.length >= 2 && v.length <= 200) || 'Content must be between 2-200 characters long'],
+      requiredRule: [(v) => v || 'This field is required'],
     };
   },
   mounted() {

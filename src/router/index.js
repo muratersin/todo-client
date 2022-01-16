@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import store from '@/store';
 import HomePage from '@/views/HomePage.vue';
 
 Vue.use(VueRouter);
@@ -44,6 +43,11 @@ const routes = [
     name: 'GroupsPage',
     component: () => import('@/views/GroupsPage.vue'),
   },
+  {
+    path: '*',
+    name: 'NotFoundPage',
+    component: () => import('@/views/NotFoundPage.vue'),
+  },
 ];
 
 const router = new VueRouter({
@@ -57,7 +61,7 @@ router.beforeEach((to, from, next) => {
     return next();
   }
 
-  if (store.getters.getIsAuthenticated) {
+  if (localStorage.getItem('access_token')) {
     if (to.name === 'AuthPage') {
       return next('/actives');
     }

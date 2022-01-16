@@ -2,6 +2,9 @@
   <div class="auth-page">
     <v-row align="center" justify="center">
       <v-col xs="12" sm="6" md="8" lg="4">
+        <div class="text-center mx-2 py-4">
+          <AppLogo />
+        </div>
         <v-card class="px-4 py-4">
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field :rules="emailRules" label="Email" v-model="email"></v-text-field>
@@ -9,7 +12,7 @@
             <v-text-field :rules="nameRules" v-if="formTypeIsRegister" label="Last Name" v-model="lastName"></v-text-field>
             <v-text-field :rules="passwordRules" label="Password" v-model="password" type="password"></v-text-field>
             <v-text-field :rules="passwordRules" v-if="formTypeIsRegister" label="Password Configm" v-model="passwordConfirm" type="password"></v-text-field>
-            <v-btn class="mt-4" v-text="submitText" block color="primary" @click="submit"></v-btn>
+            <v-btn class="mt-4" v-text="submitText" block color="primary" @click="submit" :loading="loading"></v-btn>
             <v-btn class="mt-4" text small v-text="switchFormText" @click="toggleFormType"></v-btn>
           </v-form>
         </v-card>
@@ -20,6 +23,7 @@
 
 <script>
 import { mapActions } from 'vuex';
+import AppLogo from '../components/AppLogo.vue';
 
 const FORM_TYPES = {
   LOGIN: 'login',
@@ -28,8 +32,10 @@ const FORM_TYPES = {
 
 export default {
   name: 'AuthPage',
+  components: { AppLogo },
   data() {
     return {
+      loading: false,
       firstName: '',
       lastName: '',
       email: '',
@@ -69,12 +75,11 @@ export default {
         if (!this.validateForm()) {
           return;
         }
-
+        this.loading = true;
         const payload = {
           email: this.email,
           password: this.password,
         };
-
         if (this.formTypeIsRegister) {
           payload.firstName = this.firstName;
           payload.lastName = this.lastName;
@@ -86,7 +91,9 @@ export default {
           await this.login(payload);
           this.$router.push('/actives');
         }
+        this.loading = false;
       } catch (err) {
+        this.loading = false;
         this.$root.notification.error(err?.response?.data?.message);
       }
     },
@@ -100,8 +107,5 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
-  .form {
-  }
 }
 </style>

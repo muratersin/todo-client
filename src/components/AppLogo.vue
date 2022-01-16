@@ -1,5 +1,5 @@
 <template>
-  <div>TODO</div>
+  <img width="100" src="@/assets/logo.png" alt="Todo App" />
 </template>
 
 <script>

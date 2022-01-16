@@ -1,23 +1,21 @@
 <template>
   <v-app>
     <v-navigation-drawer app permanent>
+      <div class="text-center">
+        <AppLogo />
+      </div>
       <v-list v-if="user">
         <v-list-item class="px-2">
           <v-list-item-avatar>
             <v-img src="https://cdn.vuetifyjs.com/images/john.jpg"></v-img>
           </v-list-item-avatar>
-        </v-list-item>
-
-        <v-list-item link>
           <v-list-item-content>
             <v-list-item-title class="text-h6">{{ user.fullName }}</v-list-item-title>
             <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
-
       <v-divider></v-divider>
-
       <v-list nav dense>
         <v-list-item link v-for="item in navigationItems" :key="item.to" :to="item.to">
           <v-list-item-icon>
