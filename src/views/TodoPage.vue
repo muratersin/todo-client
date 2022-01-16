@@ -21,6 +21,7 @@
             <v-menu v-model="menu" :close-on-content-click="false" transition="scale-transition" min-width="auto">
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
+                  clearable
                   hide-details
                   outlined
                   dense
@@ -47,8 +48,11 @@
         <v-btn s icon color="red accent-1">
           <v-icon size="20" @click="deleteItem(item)">mdi-delete</v-icon>
         </v-btn>
-        <v-btn icon color="green" @click="edit(item)">
+        <v-btn icon color="blue" @click="edit(item)">
           <v-icon size="20">mdi-pencil</v-icon>
+        </v-btn>
+        <v-btn icon color="green" @click="changeStatus(item)">
+          <v-icon size="20">{{ changeStatusIcon }}</v-icon>
         </v-btn>
       </template>
     </v-data-table>
@@ -62,7 +66,10 @@ import { consoleError } from '@/helpers/logger';
 import { PRIORITIES } from '@/constants/todo';
 
 export default {
-  name: 'ActivesPage',
+  name: 'TodoPage',
+  props: {
+    status: String,
+  },
   data() {
     return {
       priorities: PRIORITIES,
@@ -70,6 +77,7 @@ export default {
       groupId: null,
       priority: null,
       dateRange: null,
+      menu: false,
       headers: [
         {
           text: 'Content',
@@ -100,9 +108,7 @@ export default {
     };
   },
   created() {
-    if (this.todos.length === 0) {
-      this.fetchData();
-    }
+    this.fetchData();
 
     if (this.groups.length === 0) {
       this.fetchGroups();
@@ -110,8 +116,13 @@ export default {
   },
   computed: {
     ...mapState(['todos', 'groups']),
+    changeStatusIcon() {
+      return this.status === 'active' ? 'mdi-check' : 'mdi-file-undo';
+    },
     params() {
-      const params = {};
+      const params = {
+        status: this.status,
+      };
 
       if (this.groupId) {
         params.groupId = this.groupId;
@@ -129,7 +140,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['deleteTodo', 'fetchTodos', 'fetchGroups']),
+    ...mapActions(['deleteTodo', 'fetchTodos', 'fetchGroups', 'updateTodo']),
     async fetchData() {
       try {
         this.loading = true;
@@ -161,6 +172,27 @@ export default {
         {
           confirm: () => {
             this.deleteTodo(todo);
+          },
+        },
+      );
+    },
+    changeStatus(item) {
+      const status = this.status === 'completed' ? 'active' : 'completed';
+
+      this.$showConfirmModal(
+        {
+          title: 'Change Status',
+          text: `Are you sure to change the status a ${status}`,
+        },
+        {
+          confirm: async () => {
+            try {
+              await this.updateTodo({ id: item.id, status: status });
+              this.fetchData();
+            } catch (err) {
+              consoleError(err);
+              this.$root.notification.error(err?.response?.data?.message);
+            }
           },
         },
       );

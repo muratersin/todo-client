@@ -26,12 +26,18 @@ const routes = [
   {
     path: '/actives',
     name: 'ActivesPage',
-    component: () => import('@/views/ActivesPage.vue'),
+    props: {
+      status: 'active',
+    },
+    component: () => import('@/views/TodoPage.vue'),
   },
   {
     path: '/completeds',
     name: 'CompletedsPage',
-    component: () => import('@/views/CompletedsPage.vue'),
+    props: {
+      status: 'completed',
+    },
+    component: () => import('@/views/TodoPage.vue'),
   },
   {
     path: '/groups',
