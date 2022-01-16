@@ -50,9 +50,9 @@ export default {
   data() {
     return {
       navigationItems: [
-        { title: 'Actives', to: '/actives', icon: 'mdi-folder' },
-        { title: 'Completeds', to: '/completeds', icon: 'mdi-folder' },
-        { title: 'Groups', to: '/groups', icon: 'mdi-folder' },
+        { title: 'Actives', to: '/actives', icon: 'mdi-format-list-numbered' },
+        { title: 'Completeds', to: '/completeds', icon: 'mdi-check-outline' },
+        { title: 'Groups', to: '/groups', icon: 'mdi-group' },
       ],
     };
   },

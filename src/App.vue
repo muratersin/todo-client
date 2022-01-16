@@ -12,7 +12,7 @@ import Layout from '@/views/layout/Layout';
 export default {
   name: 'App',
   created() {
-    this.fetchUserInfo();
+    this.fetchUserAndNavigate();
   },
   computed: {
     ...mapState(['user']),
@@ -26,22 +26,23 @@ export default {
   },
   methods: {
     ...mapActions(['fetchUser']),
-    async fetchUserInfo() {
+    async fetchUserAndNavigate() {
       try {
         await this.fetchUser();
+        this.$router.push('actives');
       } catch (err) {
-        console.log('Unauthorized');
-      }
-    },
-  },
-  watch: {
-    user(user) {
-      if (user) {
-        this.$router.push('/actives');
-      } else {
-        this.$router.push('/auth');
+        this.$router.push('auth');
       }
     },
   },
 };
+
+// TODO: Get a generic method for getting field rules
+// TODO: 404
+// TODO: logger
+// TODO: mixin for commons
+// TODO: Table order
+
+// FIXME: Auth Route
+// FIXME: Logout
 </script>

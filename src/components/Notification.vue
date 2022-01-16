@@ -24,7 +24,7 @@ export default {
       this.showSnackbar = true;
     },
     error(message) {
-      this.message = message;
+      this.message = message || 'Something went wrong';
       this.color = 'error';
       this.icon = 'mdi-alert-octagon';
       this.showSnackbar = true;

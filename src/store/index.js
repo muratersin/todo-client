@@ -61,7 +61,7 @@ export default new Vuex.Store({
 
       commit('SET_ITEMS', {
         itemType: ITEM_TYPE.TODO,
-        items: data,
+        items: data.data,
       });
     },
     async addTodo({ commit }, payload) {
@@ -86,7 +86,7 @@ export default new Vuex.Store({
 
       commit('UPDATE_ITEM', {
         itemType: ITEM_TYPE.TODO,
-        item: data.data,
+        item: data,
       });
     },
     async fetchGroups({ commit }) {
@@ -94,7 +94,7 @@ export default new Vuex.Store({
 
       commit('SET_ITEMS', {
         itemType: ITEM_TYPE.GROUP,
-        items: data,
+        items: data.data,
       });
     },
     async addGroup({ commit }, payload) {
@@ -107,11 +107,11 @@ export default new Vuex.Store({
     },
     async deleteGroup({ commit }, payload) {
       const { id } = payload;
-      const { data } = await todoService.deleteGroup(id);
+      await todoService.deleteGroup(id);
 
       commit('REMOVE_ITEM', {
-        itemType: ITEM_TYPE.TODO,
-        item: data.data,
+        itemType: ITEM_TYPE.GROUP,
+        id,
       });
     },
     async updateGroup({ commit }, payload) {
@@ -119,7 +119,7 @@ export default new Vuex.Store({
 
       commit('UPDATE_ITEM', {
         itemType: ITEM_TYPE.GROUP,
-        item: data.data,
+        item: data,
       });
     },
   },

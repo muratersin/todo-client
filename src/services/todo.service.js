@@ -44,7 +44,7 @@ class TodoService {
   }
 
   deleteTodo(id) {
-    return this._axios.post(`/todo/${id}`);
+    return this._axios.delete(`/todo/${id}`);
   }
 
   fetchTodos(params = {}) {
@@ -60,12 +60,12 @@ class TodoService {
   }
 
   deleteGroup(id) {
-    return this._axios.post(`/group/${id}`);
+    return this._axios.delete(`/group/${id}`);
   }
 
   updateGroup(payload) {
     const { id, ...item } = payload;
-    return this._axios.put(`/todo/${id}`, item);
+    return this._axios.put(`/group/${id}`, item);
   }
 }
 

@@ -38,14 +38,8 @@ export default {
       valid: false,
       formType: FORM_TYPES.LOGIN,
       emailRules: [(v) => /.+@.+\..+/.test(v) || 'E-mail must be valid'],
-      nameRules: [
-        (v) => (v && v.length >= 2) || 'Name and Last Name must be at least 2 characters',
-        (v) => (v && v.length <= 50) || 'Name and Last Name must be less than 50 characters',
-      ],
-      passwordRules: [
-        (v) => (v && v.length >= 6) || 'Passwords must be at least 6 characters',
-        (v) => (v && v.length <= 10) || 'Passwords must be less than 10 characters',
-      ],
+      nameRules: [(v) => (v && v.length >= 2 && v.length <= 50) || 'Name and Last Name must be between 2-50 characters long'],
+      passwordRules: [(v) => (v && v.length >= 6 && v.length <= 10) || 'Passwords must be between 6-10 characters long'],
     };
   },
   computed: {
@@ -90,10 +84,10 @@ export default {
           this.formType = FORM_TYPES.LOGIN;
         } else {
           await this.login(payload);
-          this.$router.push('/active');
+          this.$router.push('/actives');
         }
       } catch (err) {
-        this.$root.notification.error(err?.response?.data?.message || 'Something went wrong');
+        this.$root.notification.error(err?.response?.data?.message);
       }
     },
   },
