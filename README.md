@@ -44,6 +44,14 @@ docker build -t muratersin/todo-client .
 docker run -it -p 8080:80 --rm --name todo-frontend muratersin/todo-client
 ```
 
+### Environment Variables
+
+Your can change this environment variable in .env.development and .env.production files :
+
+```
+VUE_APP_TODO_SERVICE_URL=http://localhost:3000
+```
+
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
